@@ -1,11 +1,10 @@
-//
-//  File.swift
-//  
-//
-//  Created by Jeffrey Macko on 25/09/2019.
-//
-
 import Foundation
+
+//extension String {
+//  static func hashableString<Type : Hashable>(_ hash : Type) -> String {
+//    return "\(hash.hashValue)"
+//  }
+//}
 
 extension Sequence {
   func sorted<T: Comparable>(by keyPath: KeyPath<Element, T>) -> [Element] {

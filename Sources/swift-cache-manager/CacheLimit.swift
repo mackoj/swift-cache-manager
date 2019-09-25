@@ -1,10 +1,3 @@
-//
-//  File.swift
-//  
-//
-//  Created by Jeffrey Macko on 25/09/2019.
-//
-
 import Foundation
 
 public enum CacheLimit {

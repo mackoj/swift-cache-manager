@@ -1,10 +1,3 @@
-//
-//  File.swift
-//  
-//
-//  Created by Jeffrey Macko on 25/09/2019.
-//
-
 import Foundation
 
 extension CacheManager {
@@ -37,7 +30,8 @@ extension CacheManager {
       
       return FolderInfo(files: files, info: fileInfo)
     } catch {
-      print(error)
+      print("\(#function) [\(#line)]")
+      print(error.localizedDescription)
     }
     return nil
   }
