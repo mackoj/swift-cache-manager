@@ -6,6 +6,10 @@ struct User : Codable, Equatable {
   let name : String
 }
 
+struct PropertyTester {
+  @Cache var user : User
+}
+
 final class swift_cache_managerTests: XCTestCase {
   override class func tearDown() {
     let cacheManager = CacheManager<User>()
@@ -48,6 +52,18 @@ final class swift_cache_managerTests: XCTestCase {
     assert(user2 == otherUser2, "\(user2) should equal to \(otherUser2!)")
     assert(user3 == otherUser3, "\(user3) should equal to \(otherUser3!)")
   }
+  
+//  func testPropertyWrapper_SaveAndLoad() {
+//    let pt = PropertyTester(user: User(id: 42, name: "Jeffrey"))
+//    let userID = "\(pt.user.id)"
+//
+//    pt.save(userID)
+//    pt.load(userID)
+//    
+//    let otherUser = pt.user
+//    
+//    assert(user == otherUser, "\(user) should equal to \(otherUser)")
+//  }
   
   static var allTests = [
     ("testSimpleTest_SaveAndLoad", testSimpleTest_SaveAndLoad),
