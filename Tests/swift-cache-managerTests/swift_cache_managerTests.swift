@@ -53,19 +53,20 @@ final class swift_cache_managerTests: XCTestCase {
     assert(user3 == otherUser3, "\(user3) should equal to \(otherUser3!)")
   }
   
-//  func testPropertyWrapper_SaveAndLoad() {
-//    let pt = PropertyTester(user: User(id: 42, name: "Jeffrey"))
-//    let userID = "\(pt.user.id)"
-//
-//    pt.save(userID)
-//    pt.load(userID)
-//    
-//    let otherUser = pt.user
-//    
-//    assert(user == otherUser, "\(user) should equal to \(otherUser)")
-//  }
+  //  func testPropertyWrapper_SaveAndLoad() {
+  //    let pt = PropertyTester(user: User(id: 42, name: "Jeffrey"))
+  //    let userID = "\(pt.user.id)"
+  //
+  //    pt.save(userID)
+  //    pt.load(userID)
+  //
+  //    let otherUser = pt.user
+  //
+  //    assert(user == otherUser, "\(user) should equal to \(otherUser)")
+  //  }
   
   static var allTests = [
     ("testSimpleTest_SaveAndLoad", testSimpleTest_SaveAndLoad),
+    ("testSimpleTest_SaveAndLoadAll", testSimpleTest_SaveAndLoad),
   ]
 }
