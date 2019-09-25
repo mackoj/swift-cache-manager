@@ -21,7 +21,7 @@ public class CacheManager<StorageType: Codable> {
   
   let fileManager : FileManager
   let cacheLimit : CacheLimit
-  
+    
   public init?(cacheLimit : CacheLimit = .date(ThirtyDaysInSecond), fileManager : FileManager = FileManager.default) {
     self.fileManager = fileManager
     self.cacheLimit = cacheLimit
@@ -30,10 +30,10 @@ public class CacheManager<StorageType: Codable> {
       let generalCacheFolderURL = try fileManager.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
       let cacheFolderForStorageType = "\(StorageType.self)_Cache"
       cacheDirectoryURL = generalCacheFolderURL.appendingPathComponent(cacheFolderForStorageType)
-      if fileManager.fileExists(atPath: cacheDirectoryURL.absoluteString) == false {
-        try fileManager.createDirectory(at: cacheDirectoryURL, withIntermediateDirectories: true, attributes: nil)
+      if directoryExistsAtPath(cacheDirectoryURL) == false {
+        try fileManager.createDirectory(at: cacheDirectoryURL, withIntermediateDirectories: false, attributes: nil)
       }
-//      try purgeCache()
+      try purgeCache()
     } catch {
       print("\(#function) [\(#line)]")
       print(error.localizedDescription)
@@ -72,8 +72,8 @@ public class CacheManager<StorageType: Codable> {
   }
   
   
-  public func load(_ objectID: String) -> StorageType? {
-    let fileURL = cacheDirectoryURL.appendingPathComponent(objectID)
+  public func load(_ key: String) -> StorageType? {
+    let fileURL = cacheDirectoryURL.appendingPathComponent("\(key).json")
     return load(fileURL)
   }
   
@@ -83,7 +83,7 @@ public class CacheManager<StorageType: Codable> {
   //  }
   
   public func save(_ obj: StorageType, _ key: String, options writingOptions: Data.WritingOptions? = nil) {
-    let fileURL = cacheDirectoryURL.appendingPathComponent(key)
+    let fileURL = cacheDirectoryURL.appendingPathComponent("\(key).json")
     
     do {
       let data = try JSONEncoder().encode(obj)

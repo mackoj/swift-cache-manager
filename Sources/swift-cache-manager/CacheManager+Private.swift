@@ -1,6 +1,13 @@
 import Foundation
 
 extension CacheManager {
+  
+  func directoryExistsAtPath(_ url: URL) -> Bool {
+    var isDirectory = ObjCBool(true)
+    let exists = fileManager.fileExists(atPath: url.path, isDirectory: &isDirectory)
+    return exists && isDirectory.boolValue
+  }
+
   static func getFileInfo(_ folder :  URL, fileManager : FileManager = FileManager.default) -> FolderInfo? {
     do {
       let fileURLs = try fileManager.contentsOfDirectory(
@@ -10,7 +17,7 @@ extension CacheManager {
       )
       var files : [FileInfo] = []
       for fileURL in fileURLs {
-        let attributes = try fileManager.attributesOfItem(atPath: fileURL.absoluteString)
+        let attributes = try fileManager.attributesOfItem(atPath: fileURL.path)
         let fileInfo = FileInfo(
           path: fileURL,
           created: attributes[.creationDate] as! Date,
@@ -20,7 +27,7 @@ extension CacheManager {
         files.append(fileInfo)
       }
       
-      let attributes = try fileManager.attributesOfItem(atPath: folder.absoluteString)
+      let attributes = try fileManager.attributesOfItem(atPath: folder.path)
       let fileInfo = FileInfo(
         path: folder,
         created: attributes[.creationDate] as! Date,
