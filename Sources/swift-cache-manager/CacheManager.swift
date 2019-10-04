@@ -33,8 +33,6 @@ public class CacheManager<StorageType: Codable> {
       if directoryExistsAtPath(cacheDirectoryURL) == false {
         try fileManager.createDirectory(at: cacheDirectoryURL, withIntermediateDirectories: false, attributes: nil)
       }
-      //TODO: a voir pkoi il ne fonctionne pas comme attendu ce salop !
-      // try purgeCache()
     } catch {
       print(error.localizedDescription)
       return nil
@@ -80,6 +78,8 @@ public class CacheManager<StorageType: Codable> {
       let data = try JSONEncoder().encode(obj)
       let option = writingOptions ?? dataWritingOptions
       try data.write(to: fileURL, options: option)
+      // TODO: Trouver une meilleur moment ou purger
+      // try purgeCache()
     } catch {
       print(error.localizedDescription)
     }
