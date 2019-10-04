@@ -11,20 +11,20 @@ struct PropertyTester {
 }
 
 final class swift_cache_managerTests: XCTestCase {
-//  override class func tearDown() {
-//    let cacheManager = CacheManager<User>()
-//    if let cacheDirectoryURL = cacheManager?.cacheDirectoryURL {
-//      do {
-//        try cacheManager?.fileManager.removeItem(at: cacheDirectoryURL)
-//      } catch {
-//        print(error.localizedDescription)
-//      }
-//    }
-//  }
+  override class func tearDown() {
+    let cacheManager = CacheManager<User>()
+    if let cacheDirectoryURL = cacheManager?.cacheDirectoryURL {
+      do {
+        try cacheManager?.fileManager.removeItem(at: cacheDirectoryURL)
+      } catch {
+        print(error.localizedDescription)
+      }
+    }
+  }
   
   func testSimpleTest_SaveAndLoad() {
     let cacheManager = CacheManager<User>()
-    let user = User(id: #line, name: "Jeffrey")
+    let user = User(id: #line, name: "Malotru")
     let userID = "\(user.id)"
     
     cacheManager?.save(user, userID)
@@ -36,9 +36,9 @@ final class swift_cache_managerTests: XCTestCase {
   func testSimpleTest_SaveAndLoadAll() {
     let cacheManager = CacheManager<User>()
     
-    let user1 = User(id: #line, name: "Jeffrey")
-    let user2 = User(id: #line, name: "Ayoub")
-    let user3 = User(id: #line, name: "Radwan")
+    let user1 = User(id: #line, name: "Malotru")
+    let user2 = User(id: #line, name: "Moule a gauffre")
+    let user3 = User(id: #line, name: "Bachibouzouk")
     
     cacheManager?.save(user1, "\(user1.id)")
     cacheManager?.save(user2, "\(user2.id)")
@@ -55,7 +55,7 @@ final class swift_cache_managerTests: XCTestCase {
   
   func testPurge_date() {
     let cacheManager = CacheManager<User>(cacheLimit: .date(2))
-    let user = User(id: #line, name: "Jeffrey")
+    let user = User(id: #line, name: "Malotru")
     let userID = "\(user.id)"
     
     cacheManager?.save(user, userID)
@@ -71,7 +71,7 @@ final class swift_cache_managerTests: XCTestCase {
   
   func testPurge_date_noDelete() {
     let cacheManager = CacheManager<User>(cacheLimit: .date(3600))
-    let user = User(id: #line, name: "Jeffrey")
+    let user = User(id: #line, name: "Malotru")
     let userID = "\(user.id)"
     
     cacheManager?.save(user, userID)
@@ -88,11 +88,11 @@ final class swift_cache_managerTests: XCTestCase {
   func testPurge_size() {
     let cacheManager = CacheManager<User>(cacheLimit: .size(30))
     
-    let firstUser = User(id: #line, name: "Jeffrey")
+    let firstUser = User(id: #line, name: "Malotru")
     let firstUserID = "\(firstUser.id)"
     cacheManager?.save(firstUser, firstUserID)
     
-    let secondUser = User(id: #line, name: "Jeffrey")
+    let secondUser = User(id: #line, name: "Malotru")
     let secondUserID = "\(secondUser.id)"
     cacheManager?.save(secondUser, secondUserID)
     
@@ -110,7 +110,7 @@ final class swift_cache_managerTests: XCTestCase {
     
   func testPurge_none() {
     let cacheManager = CacheManager<User>(cacheLimit: .none)
-    let user = User(id: #line, name: "Jeffrey")
+    let user = User(id: #line, name: "Malotru")
     let userID = "\(user.id)"
     
     cacheManager?.save(user, userID)

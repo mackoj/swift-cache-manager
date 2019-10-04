@@ -47,8 +47,12 @@ extension CacheManager {
   
   private func removeFileBySize(_ fileSizeLimit : Int) throws {
     guard let localFolderInfos = folderInfos else { return }
+    
     if localFolderInfos.info.size > fileSizeLimit {
-      var diff = localFolderInfos.info.size - fileSizeLimit
+      let localFolderInfosFilesSize = localFolderInfos.files.reduce(0, { (r, f) in
+        return r + f.size
+      })
+      var diff = localFolderInfosFilesSize - fileSizeLimit
       let filesInfos = localFolderInfos.files.sorted(by: \.created) // les plus vieux en premier ?
       for aFile in filesInfos {
         try fileManager.removeItem(at: aFile.url)
