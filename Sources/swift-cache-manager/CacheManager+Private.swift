@@ -40,7 +40,6 @@ extension CacheManager {
       
       return FolderInfo(files: files, info: fileInfo)
     } catch {
-      print("\(#function) [\(#line)]")
       print(error.localizedDescription)
     }
     return nil

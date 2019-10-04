@@ -33,9 +33,9 @@ public class CacheManager<StorageType: Codable> {
       if directoryExistsAtPath(cacheDirectoryURL) == false {
         try fileManager.createDirectory(at: cacheDirectoryURL, withIntermediateDirectories: false, attributes: nil)
       }
-//      try purgeCache()
+      //TODO: a voir pkoi il ne fonctionne pas comme attendu ce salop !
+      // try purgeCache()
     } catch {
-      print("\(#function) [\(#line)]")
       print(error.localizedDescription)
       return nil
     }
@@ -52,36 +52,27 @@ public class CacheManager<StorageType: Codable> {
       }
       return result
     } catch {
-      print("\(#function) [\(#line)]")
       print(error.localizedDescription)
     }
     return []
   }
   
   func load(_ fileURL: URL) -> StorageType? {
-    
     do {
       let data = try Data(contentsOf: fileURL)
       let obj = try JSONDecoder().decode(StorageType.self, from: data)
       return obj
     } catch {
-      print("\(#function) [\(#line)]")
       print(error.localizedDescription)
     }
     return nil
   }
   
-  
   public func load(_ key: String) -> StorageType? {
     let fileURL = cacheDirectoryURL.appendingPathComponent("\(key).json")
     return load(fileURL)
   }
-  
-  //  @available(iOS 13, *)
-  //  public func save<StorageType : Identifiable, Codable>(_ obj: StorageType) {
-  //    save(obj, "\(obj.id)")
-  //  }
-  
+    
   public func save(_ obj: StorageType, _ key: String, options writingOptions: Data.WritingOptions? = nil) {
     let fileURL = cacheDirectoryURL.appendingPathComponent("\(key).json")
     
@@ -90,7 +81,6 @@ public class CacheManager<StorageType: Codable> {
       let option = writingOptions ?? dataWritingOptions
       try data.write(to: fileURL, options: option)
     } catch {
-      print("\(#function) [\(#line)]")
       print(error.localizedDescription)
     }
   }

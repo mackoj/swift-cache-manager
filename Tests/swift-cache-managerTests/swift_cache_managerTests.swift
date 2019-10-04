@@ -53,7 +53,6 @@ final class swift_cache_managerTests: XCTestCase {
     assert(user3 == otherUser3, "\(user3) should equal to \(otherUser3!)")
   }
   
-  
   func testPurge_date() {
     let cacheManager = CacheManager<User>(cacheLimit: .date(2))
     let user = User(id: #line, name: "Jeffrey")
@@ -108,24 +107,7 @@ final class swift_cache_managerTests: XCTestCase {
     assert(otherUser == nil, "otherUser(\(otherUser!)) should be nil")
     assert(secondUser == otherUser2, "\(secondUser) should equal to \(otherUser2!)")
   }
-  
-  func testPurge_both() {
-    //    let cacheManager = CacheManager<User>(cacheLimit: .date(2))
-    //    print(cacheManager?.cacheDirectoryURL.path)
-    //    let user = User(id: 42, name: "Jeffrey")
-    //    let userID = "\(user.id)"
-    //
-    //    cacheManager?.save(user, userID)
-    //    let otherUser = cacheManager?.load(userID)
-    //    sleep(3)
-    //    do {
-    //      try cacheManager?.purgeCache()
-    //    } catch {
-    //      print(error)
-    //    }
-    //    assert(otherUser == nil)
-  }
-  
+    
   func testPurge_none() {
     let cacheManager = CacheManager<User>(cacheLimit: .none)
     let user = User(id: #line, name: "Jeffrey")
@@ -141,27 +123,13 @@ final class swift_cache_managerTests: XCTestCase {
     }
     assert(otherUser == user)
   }
-  
-  
-  //  func testPropertyWrapper_SaveAndLoad() {
-  //    let pt = PropertyTester(user: User(id: 42, name: "Jeffrey"))
-  //    let userID = "\(pt.user.id)"
-  //
-  //    pt.save(userID)
-  //    pt.load(userID)
-  //
-  //    let otherUser = pt.user
-  //
-  //    assert(user == otherUser, "\(user) should equal to \(otherUser)")
-  //  }
-  
+    
   static var allTests = [
     ("testSimpleTest_SaveAndLoad", testSimpleTest_SaveAndLoad),
     ("testSimpleTest_SaveAndLoadAll", testSimpleTest_SaveAndLoadAll),
     ("testPurge_date", testPurge_date),
     ("testPurge_date_noDelete", testPurge_date_noDelete),
     ("testPurge_size", testPurge_size),
-    ("testPurge_both", testPurge_both),
     ("testPurge_none", testPurge_none),
   ]
 }
