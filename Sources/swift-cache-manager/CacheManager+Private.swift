@@ -8,12 +8,12 @@ extension CacheManager {
     return exists && isDirectory.boolValue
   }
   
-  static func getFileInfo(_ folder :  URL, fileManager : FileManager = FileManager.default) -> FolderInfo? {
+  static func getFileInfo(_ folderURL :  URL, fileManager : FileManager = FileManager.default) -> FolderInfo? {
     do {
       
       /// Files
       let fileURLs = try fileManager.contentsOfDirectory(
-        at: folder,
+        at: folderURL,
         includingPropertiesForKeys: [kCFURLCreationDateKey as URLResourceKey, kCFURLContentAccessDateKey as URLResourceKey, kCFURLContentModificationDateKey as URLResourceKey],
         options: .skipsHiddenFiles
       )
@@ -21,7 +21,7 @@ extension CacheManager {
       for fileURL in fileURLs {
         let attributes = try fileManager.attributesOfItem(atPath: fileURL.path)
         let fileInfo = FileInfo(
-          path: fileURL,
+          url: fileURL,
           created: attributes[.creationDate] as! Date,
           modified: attributes[.modificationDate] as! Date,
           size: attributes[.size] as! Int
@@ -30,9 +30,9 @@ extension CacheManager {
       }
       
       /// Folder
-      let attributes = try fileManager.attributesOfItem(atPath: folder.path)
+      let attributes = try fileManager.attributesOfItem(atPath: folderURL.path)
       let fileInfo = FileInfo(
-        path: folder,
+        url: folderURL,
         created: attributes[.creationDate] as! Date,
         modified: attributes[.modificationDate] as! Date,
         size: attributes[.size] as! Int
@@ -51,7 +51,7 @@ extension CacheManager {
       var diff = localFolderInfos.info.size - fileSizeLimit
       let filesInfos = localFolderInfos.files.sorted(by: \.created) // les plus vieux en premier ?
       for aFile in filesInfos {
-        try fileManager.removeItem(at: aFile.path)
+        try fileManager.removeItem(at: aFile.url)
         diff -= aFile.size
         if diff <= 0 { break }
       }
@@ -66,7 +66,7 @@ extension CacheManager {
     let now = Date()
     if let maxDate = Calendar.autoupdatingCurrent.date(byAdding: .second, value: -expirationInSecond, to: now) {
       for aFile in filesInfos {
-        if aFile.created < maxDate { try fileManager.removeItem(at: aFile.path) }
+        if aFile.created < maxDate { try fileManager.removeItem(at: aFile.url) }
       }
     }
     folderInfos = CacheManager.getFileInfo(self.cacheDirectoryURL, fileManager: self.fileManager)

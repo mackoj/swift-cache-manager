@@ -11,16 +11,16 @@ struct PropertyTester {
 }
 
 final class swift_cache_managerTests: XCTestCase {
-  override class func tearDown() {
-    let cacheManager = CacheManager<User>()
-    if let cacheDirectoryURL = cacheManager?.cacheDirectoryURL {
-      do {
-        try cacheManager?.fileManager.removeItem(at: cacheDirectoryURL)
-      } catch {
-        print(error.localizedDescription)
-      }
-    }
-  }
+//  override class func tearDown() {
+//    let cacheManager = CacheManager<User>()
+//    if let cacheDirectoryURL = cacheManager?.cacheDirectoryURL {
+//      do {
+//        try cacheManager?.fileManager.removeItem(at: cacheDirectoryURL)
+//      } catch {
+//        print(error.localizedDescription)
+//      }
+//    }
+//  }
   
   func testSimpleTest_SaveAndLoad() {
     let cacheManager = CacheManager<User>()

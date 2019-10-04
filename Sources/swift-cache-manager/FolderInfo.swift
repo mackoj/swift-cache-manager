@@ -1,7 +1,7 @@
 import Foundation
 
 struct FileInfo : Codable {
-  let path : URL
+  let url : URL
   let created : Date
   let modified : Date
   let size : Int
