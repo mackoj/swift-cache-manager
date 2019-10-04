@@ -7,9 +7,11 @@ extension CacheManager {
     let exists = fileManager.fileExists(atPath: url.path, isDirectory: &isDirectory)
     return exists && isDirectory.boolValue
   }
-
+  
   static func getFileInfo(_ folder :  URL, fileManager : FileManager = FileManager.default) -> FolderInfo? {
     do {
+      
+      /// Files
       let fileURLs = try fileManager.contentsOfDirectory(
         at: folder,
         includingPropertiesForKeys: [kCFURLCreationDateKey as URLResourceKey, kCFURLContentAccessDateKey as URLResourceKey, kCFURLContentModificationDateKey as URLResourceKey],
@@ -27,6 +29,7 @@ extension CacheManager {
         files.append(fileInfo)
       }
       
+      /// Folder
       let attributes = try fileManager.attributesOfItem(atPath: folder.path)
       let fileInfo = FileInfo(
         path: folder,
@@ -56,20 +59,21 @@ extension CacheManager {
     }
     folderInfos = CacheManager.getFileInfo(self.cacheDirectoryURL, fileManager: self.fileManager)
   }
-
+  
   private func removeFileByDate(_ expirationInSecond : Int) throws {
     guard let localFolderInfos = folderInfos else { return }
     
     let filesInfos = localFolderInfos.files.sorted(by: \.created) // les plus vieux en premier ?
-    if let maxDate = Calendar.autoupdatingCurrent.date(byAdding: .second, value: -expirationInSecond, to: Date()) {
+    let now = Date()
+    if let maxDate = Calendar.autoupdatingCurrent.date(byAdding: .second, value: -expirationInSecond, to: now) {
       for aFile in filesInfos {
-        if aFile.created > maxDate { try fileManager.removeItem(at: aFile.path) }
+        if aFile.created < maxDate { try fileManager.removeItem(at: aFile.path) }
       }
     }
     folderInfos = CacheManager.getFileInfo(self.cacheDirectoryURL, fileManager: self.fileManager)
   }
-
-  func purgeCache() throws {
+  
+  public func purgeCache() throws {
     switch self.cacheLimit {
     case let .size(fileSize): try removeFileBySize(fileSize)
     case let .date(expirationInSecond): try removeFileByDate(expirationInSecond)

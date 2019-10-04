@@ -33,7 +33,7 @@ public class CacheManager<StorageType: Codable> {
       if directoryExistsAtPath(cacheDirectoryURL) == false {
         try fileManager.createDirectory(at: cacheDirectoryURL, withIntermediateDirectories: false, attributes: nil)
       }
-      try purgeCache()
+//      try purgeCache()
     } catch {
       print("\(#function) [\(#line)]")
       print(error.localizedDescription)
