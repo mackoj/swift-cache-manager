@@ -20,15 +20,15 @@ public class CacheManager<StorageType: Codable> {
   }()
   
   let fileManager : FileManager
-  let cacheLimit : CacheLimit
+  let cacheLimit : [CacheLimit]
     
-  public init?(cacheLimit : CacheLimit = .date(ThirtyDaysInSecond), fileManager : FileManager = FileManager.default) {
+  public init?(cacheLimit : [CacheLimit] = [.secondsAfterCreationDate(ThirtyDaysInSecond)], fileManager : FileManager = FileManager.default) {
     self.fileManager = fileManager
     self.cacheLimit = cacheLimit
     
     do {
       let generalCacheFolderURL = try fileManager.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
-      let cacheFolderForStorageType = "\(StorageType.self)_Cache"
+      let cacheFolderForStorageType = "\(StorageType.self)_Cache_\(UUID().uuidString)"
       cacheDirectoryURL = generalCacheFolderURL.appendingPathComponent(cacheFolderForStorageType)
       if directoryExistsAtPath(cacheDirectoryURL) == false {
         try fileManager.createDirectory(at: cacheDirectoryURL, withIntermediateDirectories: false, attributes: nil)
@@ -41,6 +41,7 @@ public class CacheManager<StorageType: Codable> {
   
   public func loadAll() -> [StorageType] {
     do {
+      try purgeCache()
       var result : [StorageType] = []
       let fileURLs = try fileManager.contentsOfDirectory(at: cacheDirectoryURL, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)
       for fileURL in fileURLs {
@@ -67,6 +68,9 @@ public class CacheManager<StorageType: Codable> {
   }
   
   public func load(_ key: String) -> StorageType? {
+    do { try purgeCache() }
+    catch { print(error) }
+
     let fileURL = cacheDirectoryURL.appendingPathComponent("\(key).json")
     return load(fileURL)
   }
@@ -78,8 +82,7 @@ public class CacheManager<StorageType: Codable> {
       let data = try JSONEncoder().encode(obj)
       let option = writingOptions ?? dataWritingOptions
       try data.write(to: fileURL, options: option)
-      // TODO: Trouver une meilleur moment ou purger
-      // try purgeCache()
+      try purgeCache()
     } catch {
       print(error.localizedDescription)
     }

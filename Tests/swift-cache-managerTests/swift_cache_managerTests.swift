@@ -6,10 +6,6 @@ struct User : Codable, Equatable {
   let name : String
 }
 
-struct PropertyTester {
-  @Cache var user : User
-}
-
 final class swift_cache_managerTests: XCTestCase {
   override class func tearDown() {
     let cacheManager = CacheManager<User>()
@@ -54,39 +50,29 @@ final class swift_cache_managerTests: XCTestCase {
   }
   
   func testPurge_date() {
-    let cacheManager = CacheManager<User>(cacheLimit: .date(2))
+    let cacheManager = CacheManager<User>(cacheLimit: [.secondsAfterCreationDate(2)])
     let user = User(id: #line, name: "Malotru")
     let userID = "\(user.id)"
     
     cacheManager?.save(user, userID)
     sleep(3)
-    do {
-      try cacheManager?.purgeCache()
-    } catch {
-      print(error)
-    }
     let otherUser = cacheManager?.load(userID)
     assert(otherUser == nil, "otherUser(\(otherUser!)) should be nil")
   }
   
   func testPurge_date_noDelete() {
-    let cacheManager = CacheManager<User>(cacheLimit: .date(3600))
+    let cacheManager = CacheManager<User>(cacheLimit: [.secondsAfterCreationDate(3600)])
     let user = User(id: #line, name: "Malotru")
     let userID = "\(user.id)"
     
     cacheManager?.save(user, userID)
     sleep(3)
-    do {
-      try cacheManager?.purgeCache()
-    } catch {
-      print(error)
-    }
     let otherUser = cacheManager?.load(userID)
     assert(otherUser != nil, "otherUser should not be nil")
   }
   
   func testPurge_size() {
-    let cacheManager = CacheManager<User>(cacheLimit: .size(30))
+    let cacheManager = CacheManager<User>(cacheLimit: [.size(30)])
     
     let firstUser = User(id: #line, name: "Malotru")
     let firstUserID = "\(firstUser.id)"
@@ -95,13 +81,7 @@ final class swift_cache_managerTests: XCTestCase {
     let secondUser = User(id: #line, name: "Malotru")
     let secondUserID = "\(secondUser.id)"
     cacheManager?.save(secondUser, secondUserID)
-    
-    do {
-      try cacheManager?.purgeCache()
-    } catch {
-      print(error)
-    }
-    
+        
     let otherUser = cacheManager?.load(firstUserID)
     let otherUser2 = cacheManager?.load(secondUserID)
     assert(otherUser == nil, "otherUser(\(otherUser!)) should be nil")
@@ -109,18 +89,13 @@ final class swift_cache_managerTests: XCTestCase {
   }
     
   func testPurge_none() {
-    let cacheManager = CacheManager<User>(cacheLimit: .none)
+    let cacheManager = CacheManager<User>(cacheLimit: [])
     let user = User(id: #line, name: "Malotru")
     let userID = "\(user.id)"
     
     cacheManager?.save(user, userID)
-    let otherUser = cacheManager?.load(userID)
     sleep(3)
-    do {
-      try cacheManager?.purgeCache()
-    } catch {
-      print(error)
-    }
+    let otherUser = cacheManager?.load(userID)
     assert(otherUser == user)
   }
     

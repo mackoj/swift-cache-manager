@@ -53,11 +53,13 @@ extension CacheManager {
         return r + f.size
       })
       var diff = localFolderInfosFilesSize - fileSizeLimit
-      let filesInfos = localFolderInfos.files.sorted(by: \.created) // les plus vieux en premier ?
-      for aFile in filesInfos {
-        try fileManager.removeItem(at: aFile.url)
-        diff -= aFile.size
-        if diff <= 0 { break }
+      if diff > 0 {
+        let filesInfos = localFolderInfos.files.sorted(by: \.created) // les plus vieux en premier ?
+        for aFile in filesInfos {
+          try fileManager.removeItem(at: aFile.url)
+          diff -= aFile.size
+          if diff <= 0 { break }
+        }
       }
     }
     folderInfos = CacheManager.getFileInfo(self.cacheDirectoryURL, fileManager: self.fileManager)
@@ -77,13 +79,11 @@ extension CacheManager {
   }
   
   public func purgeCache() throws {
-    switch self.cacheLimit {
-    case let .size(fileSize): try removeFileBySize(fileSize)
-    case let .date(expirationInSecond): try removeFileByDate(expirationInSecond)
-    case let .dateAndSize(expirationInSecond, fileSize):
-      try removeFileBySize(fileSize)
-      try removeFileByDate(expirationInSecond)
-    case .none: break
+    for limit in self.cacheLimit {
+      switch limit {
+      case let .size(fileSize): try removeFileBySize(fileSize)
+      case let .secondsAfterCreationDate(expirationInSecond): try removeFileByDate(expirationInSecond)
+      }
     }
   }
 }
