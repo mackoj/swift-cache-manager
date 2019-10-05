@@ -37,6 +37,17 @@ func saveAndLoadAll() {
   assert(user3 == otherUser3, "\(user3) should equal to \(otherUser3!)")
 }
 
+func clearTheCache() {
+  let cacheManager = CacheManager<User>(cacheLimit: [])
+  let user = User(id: #line, name: "Malotru")
+  let userID = "\(user.id)"
+  
+  cacheManager?.save(user, userID)
+  cacheManager?.removeAllFileFromCache()
+  let otherUser = cacheManager?.load(userID)
+  assert(otherUser == nil, "otherUser(\(otherUser!)) should be nil")
+}
+
 ```
 
 ## Done
