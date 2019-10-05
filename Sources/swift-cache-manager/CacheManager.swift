@@ -24,7 +24,11 @@ public class CacheManager<StorageType: Codable> {
   let rootCacheDirectoryURL: URL
   public let cacheDirectoryURL: URL
 
-  public init?(cacheLimit : [CacheLimit] = [.secondsAfterCreationDate(CacheManagerThirtyDaysInSecond)], fileManager : FileManager = FileManager.default) {
+  public init?(
+    cacheLimit : [CacheLimit] = [.secondsAfterCreationDate(CacheManagerThirtyDaysInSecond)],
+    fileManager : FileManager = FileManager.default
+  ) {
+    
     self.fileManager = fileManager
     self.cacheLimit = cacheLimit
     
@@ -70,7 +74,9 @@ public class CacheManager<StorageType: Codable> {
     return []
   }
   
-  func load(_ fileURL: URL) -> StorageType? {
+  func load(
+    _ fileURL: URL
+  ) -> StorageType? {
     do {
       let data = try Data(contentsOf: fileURL)
       let obj = try JSONDecoder().decode(StorageType.self, from: data)
@@ -81,7 +87,9 @@ public class CacheManager<StorageType: Codable> {
     return nil
   }
   
-  public func load(_ key: String) -> StorageType? {
+  public func load(
+    _ key: String
+  ) -> StorageType? {
     do { try purgeCache() }
     catch { print(error) }
 
@@ -89,7 +97,10 @@ public class CacheManager<StorageType: Codable> {
     return load(fileURL)
   }
     
-  public func save(_ obj: StorageType, _ key: String, options writingOptions: Data.WritingOptions? = nil) {
+  public func save(
+    _ obj: StorageType,
+    _ key: String, options writingOptions: Data.WritingOptions? = nil
+  ) {
     let fileURL = cacheDirectoryURL.appendingPathComponent("\(key).json")
     
     do {
