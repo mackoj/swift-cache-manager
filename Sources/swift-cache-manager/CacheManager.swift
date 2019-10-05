@@ -1,6 +1,7 @@
 import Foundation
 
-public let ThirtyDaysInSecond : Int = 2_592_000
+public let CacheManagerThirtyDaysInSecond : Int = 2_592_000
+public let CacheManagerRootFolderName : String = "fr.mackoj.cachemanager"
 
 public class CacheManager<StorageType: Codable> {
   public let cacheDirectoryURL: URL
@@ -23,15 +24,14 @@ public class CacheManager<StorageType: Codable> {
   let fileManager : FileManager
   let cacheLimit : [CacheLimit]
     
-  public init?(cacheLimit : [CacheLimit] = [.secondsAfterCreationDate(ThirtyDaysInSecond)], fileManager : FileManager = FileManager.default) {
+  public init?(cacheLimit : [CacheLimit] = [.secondsAfterCreationDate(CacheManagerThirtyDaysInSecond)], fileManager : FileManager = FileManager.default) {
     self.fileManager = fileManager
     self.cacheLimit = cacheLimit
     
     do {
       let generalCacheFolderURL = try fileManager.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
-      let libFolderName = "fr.mackoj.cachemanager"
-      let cacheFolderForStorageType = "\(StorageType.self)_Cache_\(UUID().uuidString)"
-      rootCacheDirectoryURL = generalCacheFolderURL.appendingPathComponent(libFolderName)
+      let cacheFolderForStorageType = "\(StorageType.self)_\(UUID().uuidString)"
+      rootCacheDirectoryURL = generalCacheFolderURL.appendingPathComponent(CacheManagerRootFolderName)
       cacheDirectoryURL = rootCacheDirectoryURL.appendingPathComponent(cacheFolderForStorageType)
       if directoryExistsAtPath(cacheDirectoryURL) == false {
         try fileManager.createDirectory(at: cacheDirectoryURL, withIntermediateDirectories: true, attributes: nil)
