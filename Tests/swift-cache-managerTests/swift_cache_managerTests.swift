@@ -17,6 +17,7 @@ final class swift_cache_managerTests: XCTestCase {
     let otherUser = cacheManager?.load(userID)
     
     assert(user == otherUser, "\(user) should equal to \(otherUser!)")
+    cacheManager?.removeAllFileFromCache()
   }
   
   func test_2_save_then_loadAll() {
@@ -37,6 +38,7 @@ final class swift_cache_managerTests: XCTestCase {
     assert(user1 == otherUser1, "\(user1) should equal to \(otherUser1!)")
     assert(user2 == otherUser2, "\(user2) should equal to \(otherUser2!)")
     assert(user3 == otherUser3, "\(user3) should equal to \(otherUser3!)")
+    cacheManager?.removeAllFileFromCache()
   }
   
   func test_3_purge_secondsAfterCreationDate() {
@@ -48,6 +50,7 @@ final class swift_cache_managerTests: XCTestCase {
     sleep(3)
     let otherUser = cacheManager?.load(userID)
     assert(otherUser == nil, "otherUser(\(otherUser!)) should be nil")
+    cacheManager?.removeAllFileFromCache()
   }
   
   func test_4_purge_secondsAfterCreationDate_with_expiration() {
@@ -59,6 +62,7 @@ final class swift_cache_managerTests: XCTestCase {
     sleep(3)
     let otherUser = cacheManager?.load(userID)
     assert(otherUser != nil, "otherUser should not be nil")
+    cacheManager?.removeAllFileFromCache()
   }
   
   func test_5_purge_size() {
@@ -76,6 +80,7 @@ final class swift_cache_managerTests: XCTestCase {
     let otherUser2 = cacheManager?.load(secondUserID)
     assert(otherUser == nil, "otherUser(\(otherUser!)) should be nil")
     assert(secondUser == otherUser2, "\(secondUser) should equal to \(otherUser2!)")
+    cacheManager?.removeAllFileFromCache()
   }
   
   func test_6_purge_should_not_purge_data() {
@@ -87,6 +92,7 @@ final class swift_cache_managerTests: XCTestCase {
     sleep(3)
     let otherUser = cacheManager?.load(userID)
     assert(otherUser == user)
+    cacheManager?.removeAllFileFromCache()
   }
   
   func test_7_removeAllFileFromCache() {

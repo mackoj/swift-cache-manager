@@ -48,7 +48,7 @@ public class CacheManager<StorageType: Codable> {
   
   public func removeAllFileFromCache() {
     do {
-      try fileManager.removeItem(at: rootCacheDirectoryURL)
+      try fileManager.removeItem(at: cacheDirectoryURL)
       if directoryExistsAtPath(cacheDirectoryURL) == false {
         try fileManager.createDirectory(at: cacheDirectoryURL, withIntermediateDirectories: true, attributes: nil)
       }
