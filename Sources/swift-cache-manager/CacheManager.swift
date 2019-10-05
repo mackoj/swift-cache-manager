@@ -4,8 +4,6 @@ public let CacheManagerThirtyDaysInSecond : Int = 2_592_000
 public let CacheManagerRootFolderName : String = "fr.mackoj.cachemanager"
 
 public class CacheManager<StorageType: Codable> {
-  public let cacheDirectoryURL: URL
-  private let rootCacheDirectoryURL: URL
   #if os(iOS)
   let dataWritingOptions : Data.WritingOptions = [
     .atomicWrite,
@@ -23,7 +21,9 @@ public class CacheManager<StorageType: Codable> {
   
   let fileManager : FileManager
   let cacheLimit : [CacheLimit]
-    
+  let rootCacheDirectoryURL: URL
+  public let cacheDirectoryURL: URL
+
   public init?(cacheLimit : [CacheLimit] = [.secondsAfterCreationDate(CacheManagerThirtyDaysInSecond)], fileManager : FileManager = FileManager.default) {
     self.fileManager = fileManager
     self.cacheLimit = cacheLimit

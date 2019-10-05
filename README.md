@@ -63,3 +63,4 @@ func clearTheCache() {
 - [ ] Add CI
 - [ ] Add support for Property Wrappers - https://github.com/mackoj/Burritos
 - [ ] Improve Package.swift
+- [ ] Support various storage type (today only JSON)
