@@ -7,18 +7,8 @@ struct User : Codable, Equatable {
 }
 
 final class swift_cache_managerTests: XCTestCase {
-  override class func tearDown() {
-    let cacheManager = CacheManager<User>()
-    if let cacheDirectoryURL = cacheManager?.cacheDirectoryURL {
-      do {
-        try cacheManager?.fileManager.removeItem(at: cacheDirectoryURL)
-      } catch {
-        print(error.localizedDescription)
-      }
-    }
-  }
   
-  func testSimpleTest_SaveAndLoad() {
+  func test_1_SimpleTest_SaveAndLoad() {
     let cacheManager = CacheManager<User>()
     let user = User(id: #line, name: "Malotru")
     let userID = "\(user.id)"
@@ -29,7 +19,7 @@ final class swift_cache_managerTests: XCTestCase {
     assert(user == otherUser, "\(user) should equal to \(otherUser!)")
   }
   
-  func testSimpleTest_SaveAndLoadAll() {
+  func test_2_SimpleTest_SaveAndLoadAll() {
     let cacheManager = CacheManager<User>()
     
     let user1 = User(id: #line, name: "Malotru")
@@ -49,7 +39,7 @@ final class swift_cache_managerTests: XCTestCase {
     assert(user3 == otherUser3, "\(user3) should equal to \(otherUser3!)")
   }
   
-  func testPurge_date() {
+  func test_3_Purge_date() {
     let cacheManager = CacheManager<User>(cacheLimit: [.secondsAfterCreationDate(2)])
     let user = User(id: #line, name: "Malotru")
     let userID = "\(user.id)"
@@ -60,7 +50,7 @@ final class swift_cache_managerTests: XCTestCase {
     assert(otherUser == nil, "otherUser(\(otherUser!)) should be nil")
   }
   
-  func testPurge_date_noDelete() {
+  func test_4_Purge_date_noDelete() {
     let cacheManager = CacheManager<User>(cacheLimit: [.secondsAfterCreationDate(3600)])
     let user = User(id: #line, name: "Malotru")
     let userID = "\(user.id)"
@@ -71,7 +61,7 @@ final class swift_cache_managerTests: XCTestCase {
     assert(otherUser != nil, "otherUser should not be nil")
   }
   
-  func testPurge_size() {
+  func test_5_Purge_size() {
     let cacheManager = CacheManager<User>(cacheLimit: [.size(30)])
     
     let firstUser = User(id: #line, name: "Malotru")
@@ -81,14 +71,14 @@ final class swift_cache_managerTests: XCTestCase {
     let secondUser = User(id: #line, name: "Malotru")
     let secondUserID = "\(secondUser.id)"
     cacheManager?.save(secondUser, secondUserID)
-        
+    
     let otherUser = cacheManager?.load(firstUserID)
     let otherUser2 = cacheManager?.load(secondUserID)
     assert(otherUser == nil, "otherUser(\(otherUser!)) should be nil")
     assert(secondUser == otherUser2, "\(secondUser) should equal to \(otherUser2!)")
   }
-    
-  func testPurge_none() {
+  
+  func test_6_Purge_none() {
     let cacheManager = CacheManager<User>(cacheLimit: [])
     let user = User(id: #line, name: "Malotru")
     let userID = "\(user.id)"
@@ -98,13 +88,26 @@ final class swift_cache_managerTests: XCTestCase {
     let otherUser = cacheManager?.load(userID)
     assert(otherUser == user)
   }
+  
+  func test_7_Purge_all() {
+    let cacheManager = CacheManager<User>(cacheLimit: [])
+    let user = User(id: #line, name: "Malotru")
+    let userID = "\(user.id)"
     
+    cacheManager?.save(user, userID)
+    cacheManager?.removeAllFileFromCache()
+    let otherUser = cacheManager?.load(userID)
+    assert(otherUser == nil, "otherUser(\(otherUser!)) should be nil")
+  }
+  
+  
   static var allTests = [
-    ("testSimpleTest_SaveAndLoad", testSimpleTest_SaveAndLoad),
-    ("testSimpleTest_SaveAndLoadAll", testSimpleTest_SaveAndLoadAll),
-    ("testPurge_date", testPurge_date),
-    ("testPurge_date_noDelete", testPurge_date_noDelete),
-    ("testPurge_size", testPurge_size),
-    ("testPurge_none", testPurge_none),
+    ("test_1_SimpleTest_SaveAndLoad", test_1_SimpleTest_SaveAndLoad),
+    ("test_2_SimpleTest_SaveAndLoadAll", test_2_SimpleTest_SaveAndLoadAll),
+    ("test_3_Purge_date", test_3_Purge_date),
+    ("test_4_Purge_date_noDelete", test_4_Purge_date_noDelete),
+    ("test_5_Purge_size", test_5_Purge_size),
+    ("test_6_Purge_none", test_6_Purge_none),
+    ("test_7_Purge_all", test_7_Purge_all),
   ]
 }

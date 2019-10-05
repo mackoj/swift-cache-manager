@@ -4,6 +4,7 @@ public let ThirtyDaysInSecond : Int = 2_592_000
 
 public class CacheManager<StorageType: Codable> {
   public let cacheDirectoryURL: URL
+  private let rootCacheDirectoryURL: URL
   #if os(iOS)
   let dataWritingOptions : Data.WritingOptions = [
     .atomicWrite,
@@ -28,14 +29,27 @@ public class CacheManager<StorageType: Codable> {
     
     do {
       let generalCacheFolderURL = try fileManager.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+      let libFolderName = "fr.mackoj.cachemanager"
       let cacheFolderForStorageType = "\(StorageType.self)_Cache_\(UUID().uuidString)"
-      cacheDirectoryURL = generalCacheFolderURL.appendingPathComponent(cacheFolderForStorageType)
+      rootCacheDirectoryURL = generalCacheFolderURL.appendingPathComponent(libFolderName)
+      cacheDirectoryURL = rootCacheDirectoryURL.appendingPathComponent(cacheFolderForStorageType)
       if directoryExistsAtPath(cacheDirectoryURL) == false {
-        try fileManager.createDirectory(at: cacheDirectoryURL, withIntermediateDirectories: false, attributes: nil)
+        try fileManager.createDirectory(at: cacheDirectoryURL, withIntermediateDirectories: true, attributes: nil)
       }
     } catch {
       print(error.localizedDescription)
       return nil
+    }
+  }
+  
+  public func removeAllFileFromCache() {
+    do {
+      try fileManager.removeItem(at: rootCacheDirectoryURL)
+      if directoryExistsAtPath(cacheDirectoryURL) == false {
+        try fileManager.createDirectory(at: cacheDirectoryURL, withIntermediateDirectories: true, attributes: nil)
+      }
+    } catch {
+      print(error.localizedDescription)
     }
   }
   
