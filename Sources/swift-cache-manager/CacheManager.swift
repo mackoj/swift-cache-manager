@@ -26,7 +26,7 @@ public class CacheManager<StorageType: Codable> {
 
   public init?(
     cacheLimit : [CacheLimit] = [.secondsAfterCreationDate(CacheManagerThirtyDaysInSecond)],
-    cacheInDifferentFolderForSameType : Bool = false
+    cacheInDifferentFolderForSameType : Bool = false,
     fileManager : FileManager = FileManager.default
   ) {
     
@@ -35,7 +35,7 @@ public class CacheManager<StorageType: Codable> {
     
     do {
       let generalCacheFolderURL = try fileManager.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
-      let ext = cacheInDifferentFolderForSameType ? UUID().uuidString = ""
+      let ext = cacheInDifferentFolderForSameType ? UUID().uuidString : ""
       let cacheFolderForStorageType = "\(StorageType.self)_\(ext)"
       rootCacheDirectoryURL = generalCacheFolderURL.appendingPathComponent(CacheManagerRootFolderName)
       cacheDirectoryURL = rootCacheDirectoryURL.appendingPathComponent(cacheFolderForStorageType)
